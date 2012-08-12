@@ -1,5 +1,5 @@
 Name:           quiterss
-Version:        0.9.1
+Version:        0.10.0
 Release:        1%{?dist}
 Summary:        RSS/Atom feed reader written on Qt
 Summary(ru):    QuiteRSS - быстрая и удобная программа для чтения новостных лент RSS/Atom
@@ -8,7 +8,7 @@ License:        GPLv3
 URL:            http://code.google.com/p/quite-rss/
 Source0:        http://quite-rss.googlecode.com/files/QuiteRSS-%{version}-src.tar.gz
 
-BuildRequires:  qt-devel
+BuildRequires:  qt-devel >= 4.7
 BuildRequires:  qtwebkit-devel
 BuildRequires:  pkgconfig
 
@@ -46,5 +46,8 @@ make install INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Sun Aug 12 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.10.0-1.R
+- update to 0.10.0
+
 * Tue Jun 19 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.9.1-1.R
 - initial build
