@@ -1,5 +1,5 @@
 Name:           quiterss
-Version:        0.10.0
+Version:        0.10.1
 Release:        1%{?dist}
 Summary:        RSS/Atom feed reader written on Qt
 Summary(ru):    QuiteRSS - быстрая и удобная программа для чтения новостных лент RSS/Atom
@@ -32,12 +32,10 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install INSTALL_ROOT=%{buildroot}
 
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING README
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
@@ -46,6 +44,9 @@ make install INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Tue Aug 21 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.10.1-1.R
+- update to 0.10.1
+
 * Sun Aug 12 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.10.0-1.R
 - update to 0.10.0
 
