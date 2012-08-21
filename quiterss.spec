@@ -34,6 +34,18 @@ make %{?_smp_mflags}
 %install
 make install INSTALL_ROOT=%{buildroot}
 
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+
 
 %files
 %doc AUTHORS COPYING README
@@ -46,6 +58,7 @@ make install INSTALL_ROOT=%{buildroot}
 %changelog
 * Tue Aug 21 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.10.1-1.R
 - update to 0.10.1
+- added gtk-update-icon-cache
 
 * Sun Aug 12 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.10.0-1.R
 - update to 0.10.0
