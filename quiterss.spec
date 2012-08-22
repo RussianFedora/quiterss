@@ -1,14 +1,15 @@
 Name:           quiterss
 Version:        0.10.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        RSS/Atom feed reader written on Qt
 Summary(ru):    QuiteRSS - быстрая и удобная программа для чтения новостных лент RSS/Atom
 
 License:        GPLv3
 URL:            http://code.google.com/p/quite-rss/
 Source0:        http://quite-rss.googlecode.com/files/QuiteRSS-%{version}-src.tar.gz
+Patch0:         quiterss-el6-compile.patch
 
-BuildRequires:  qt-devel >= 4.7
+BuildRequires:  qt-devel
 BuildRequires:  qtwebkit-devel
 BuildRequires:  pkgconfig
 
@@ -22,6 +23,9 @@ Quite fast and comfortable to user RSS/Atom feed reader written on Qt.
 
 %prep
 %setup -q -n QuiteRSS-%{version}-src
+%if %{defined rhel} && 0%{?rhel} < 7
+%patch0 -p1 -b .el6-compile
+%endif
 chmod -x AUTHORS COPYING README
 
 
@@ -56,6 +60,9 @@ fi
 
 
 %changelog
+* Wed Aug 22 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.10.1-2.R
+- added patch for compile in el6
+
 * Tue Aug 21 2012 Vasiliy N. Glazov <vascom2@gmail.com> - 0.10.1-1.R
 - update to 0.10.1
 - added gtk-update-icon-cache

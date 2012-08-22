@@ -1,0 +1,344 @@
+diff -ur QuiteRSS-0.10.1-src.orig/src/addfeedwizard.cpp QuiteRSS-0.10.1-src.1/src/addfeedwizard.cpp
+--- QuiteRSS-0.10.1-src.orig/src/addfeedwizard.cpp	2012-08-16 01:45:24.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/addfeedwizard.cpp	2012-08-22 08:18:01.109354138 -0400
+@@ -239,7 +239,7 @@
+               "VALUES (:feedUrl, :feedCreateTime, :rowToParent)");
+     q.bindValue(":feedUrl", feedUrlString_);
+     q.bindValue(":feedCreateTime",
+-        QLocale::c().toString(QDateTime::currentDateTimeUtc(), "yyyy-MM-ddTHH:mm:ss"));
++        QLocale::c().toString(QDateTime::currentDateTime().toUTC(), "yyyy-MM-ddTHH:mm:ss"));
+     q.bindValue(":rowToParent", rowToParent);
+     q.exec();
+     q.finish();
+Only in QuiteRSS-0.10.1-src.1/src: addfeedwizard.cpp.orig
+diff -ur QuiteRSS-0.10.1-src.orig/src/feedsview.cpp QuiteRSS-0.10.1-src.1/src/feedsview.cpp
+--- QuiteRSS-0.10.1-src.orig/src/feedsview.cpp	2012-06-27 12:07:45.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/feedsview.cpp	2012-08-22 08:16:58.596343603 -0400
+@@ -27,7 +27,7 @@
+   if (!indexAt(event->pos()).isValid()) return;
+ 
+   selectIndex = indexAt(event->pos());
+-  if ((event->buttons() & Qt::MiddleButton)) {
++  if ((event->buttons() & Qt::MidButton)) {
+     if (selectIndex.isValid())
+       emit signalMiddleClicked();
+   } else if (event->buttons() & Qt::RightButton) {
+Only in QuiteRSS-0.10.1-src.1/src: feedsview.cpp.orig
+diff -ur QuiteRSS-0.10.1-src.orig/src/main.cpp QuiteRSS-0.10.1-src.1/src/main.cpp
+--- QuiteRSS-0.10.1-src.orig/src/main.cpp	2012-07-11 06:37:12.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/main.cpp	2012-08-22 08:16:58.599344021 -0400
+@@ -11,8 +11,8 @@
+ 
+ void loadModules(QSplashScreen* psplash)
+ {
+-  QElapsedTimer time;
+-  time.start();
++  //QElapsedTimer time;
++  //time.start();
+ 
+   QProgressBar splashProgress;
+   splashProgress.setObjectName("splashProgress");
+@@ -24,16 +24,16 @@
+   layout->addStretch(1);
+   layout->addWidget(&splashProgress);
+   splash->setLayout(layout);
+-  for (int i = 0; i < 100; ) {
+-    if (time.elapsed() >= 1) {
+-      time.start();
+-      ++i;
+-      qApp->processEvents();
+-      splashProgress.setValue(i);
+-      psplash->showMessage("Loading: " + QString::number(i) + "%",
+-                           Qt::AlignRight | Qt::AlignTop, Qt::white);
+-    }
+-  }
++  //for (int i = 0; i < 100; ) {
++  //  if (time.elapsed() >= 1) {
++  //    time.start();
++  //    ++i;
++  //    qApp->processEvents();
++  //    splashProgress.setValue(i);
++  //    psplash->showMessage("Loading: " + QString::number(i) + "%",
++  //                         Qt::AlignRight | Qt::AlignTop, Qt::white);
++  //  }
++  //}
+ }
+ 
+ void createSplashScreen()
+Only in QuiteRSS-0.10.1-src.1/src: main.cpp.orig
+diff -ur QuiteRSS-0.10.1-src.orig/src/newstabwidget.cpp QuiteRSS-0.10.1-src.1/src/newstabwidget.cpp
+--- QuiteRSS-0.10.1-src.orig/src/newstabwidget.cpp	2012-08-16 01:45:24.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/newstabwidget.cpp	2012-08-22 08:29:50.325415444 -0400
+@@ -446,7 +446,7 @@
+   if (obj == webPanelTitle_) {
+     if (event->type() == QEvent::MouseButtonRelease) {
+       QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+-      if (mouseEvent->button() & Qt::MiddleButton) {
++      if (mouseEvent->button() & Qt::MidButton) {
+         webView_->midButtonClick = true;
+         QMouseEvent* pe =
+             new QMouseEvent(QEvent::MouseButtonRelease, mouseEvent->pos(),
+@@ -471,9 +471,9 @@
+ 
+ void NewsTabWidget::slotNewsViewSelected(QModelIndex index, bool clicked)
+ {
+-  QElapsedTimer timer;
+-  timer.start();
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //QElapsedTimer timer;
++  //timer.start();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   int indexId;
+ 
+@@ -484,7 +484,7 @@
+     rsslisting_->slotUpdateStatus();  // необходимо, когда выбрана другая лента, но новость в ней не выбрана
+     currentNewsIdOld = indexId;
+     currentFeedIdOld = feedId_;
+-    qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed() << "(invalid index)";
++    //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed() << "(invalid index)";
+     return;
+   }
+ 
+@@ -492,7 +492,7 @@
+         newsModel_->index(index.row(), newsModel_->fieldIndex("read")).data(Qt::EditRole).toInt() >= 1) ||
+       clicked) {
+ 
+-    qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++    //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+     markNewsReadTimer_->stop();
+     if (rsslisting_->markNewsReadOn_) {
+@@ -508,21 +508,21 @@
+         arg(indexId).arg(feedId_);
+     q.exec(qStr);
+ 
+-    qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++    //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+     QWebSettings::globalSettings()->clearMemoryCaches();
+     webView_->setHtml("");
+ 
+     updateWebView(index);
+ 
+-    qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++    //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   }
+   rsslisting_->slotUpdateStatus();
+ 
+   currentNewsIdOld = indexId;
+   currentFeedIdOld = feedId_;
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ }
+ 
+ //! Двойной клик в списке новостей
+Only in QuiteRSS-0.10.1-src.1/src: newstabwidget.cpp.orig
+diff -ur QuiteRSS-0.10.1-src.orig/src/newsview.cpp QuiteRSS-0.10.1-src.1/src/newsview.cpp
+--- QuiteRSS-0.10.1-src.orig/src/newsview.cpp	2012-08-16 01:45:24.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/newsview.cpp	2012-08-22 08:22:21.561682702 -0400
+@@ -40,7 +40,7 @@
+       event->ignore();
+       return;
+     }
+-  } else if ((event->buttons() & Qt::MiddleButton)) {
++  } else if ((event->buttons() & Qt::MidButton)) {
+     emit signalSetItemRead(index, 1);
+     emit signalMiddleClicked(index);
+     return;
+Only in QuiteRSS-0.10.1-src.1/src: newsview.cpp.orig
+diff -ur QuiteRSS-0.10.1-src.orig/src/parseobject.cpp QuiteRSS-0.10.1-src.1/src/parseobject.cpp
+--- QuiteRSS-0.10.1-src.orig/src/parseobject.cpp	2012-08-16 01:45:24.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/parseobject.cpp	2012-08-22 08:26:46.293464295 -0400
+@@ -239,9 +239,9 @@
+             q.addBindValue(titleString);
+             q.addBindValue(QTextDocumentFragment::fromHtml(authorString.simplified()).toPlainText());
+             if (rssPubDateString.isEmpty())
+-              rssPubDateString = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
++              rssPubDateString = QDateTime::currentDateTime().toUTC().toString(Qt::ISODate);
+             q.addBindValue(rssPubDateString);
+-            q.addBindValue(QDateTime::currentDateTime().toString(Qt::ISODate));
++            q.addBindValue(QDateTime::currentDateTime().toUTC().toString(Qt::ISODate));
+             q.addBindValue(linkString);
+             q.addBindValue(QTextDocumentFragment::fromHtml(categoryString.simplified()).toPlainText());
+             q.exec();
+@@ -253,7 +253,7 @@
+             qDebug() << "       " << titleString;
+             qDebug() << "       " << authorString;
+             qDebug() << "       " << rssPubDateString;
+-            qDebug() << "       " << QDateTime::currentDateTime().toString();
++            qDebug() << "       " << QDateTime::currentDateTime().toUTC().toString();
+             qDebug() << "       " << linkString;
+             qDebug() << "       " << categoryString;
+             qDebug() << q.lastError().number() << ": " << q.lastError().text();
+@@ -318,9 +318,9 @@
+             q.addBindValue(authorUriString);
+             q.addBindValue(authorEmailString);
+             if (atomUpdatedString.isEmpty())
+-              atomUpdatedString = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
++              atomUpdatedString = QDateTime::currentDateTime().toUTC().toString(Qt::ISODate);
+             q.addBindValue(atomUpdatedString);
+-            q.addBindValue(QDateTime::currentDateTime().toString(Qt::ISODate));
++            q.addBindValue(QDateTime::QDateTime::currentDateTime().toUTC().toString(Qt::ISODate));
+             q.addBindValue(linkString);
+             q.addBindValue(linkAlternateString);
+             q.addBindValue(QTextDocumentFragment::fromHtml(categoryString.simplified()).toPlainText());
+@@ -335,7 +335,7 @@
+             qDebug() << "       " << authorUriString;
+             qDebug() << "       " << authorEmailString;
+             qDebug() << "       " << atomUpdatedString;
+-            qDebug() << "       " << QDateTime::currentDateTime().toString();
++            qDebug() << "       " << QDateTime::currentDateTime().toUTC().toString();
+             qDebug() << "       " << linkString;
+             qDebug() << "       " << linkAlternateString;
+             qDebug() << "       " << categoryString;
+diff -ur QuiteRSS-0.10.1-src.orig/src/rsslisting.cpp QuiteRSS-0.10.1-src.1/src/rsslisting.cpp
+--- QuiteRSS-0.10.1-src.orig/src/rsslisting.cpp	2012-08-16 03:56:34.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/rsslisting.cpp	2012-08-22 08:22:00.736525599 -0400
+@@ -237,7 +237,7 @@
+   } else if (obj == tabBar_) {
+     if (event->type() == QEvent::MouseButtonPress) {
+       QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+-      if (mouseEvent->button() & Qt::MiddleButton) {
++      if (mouseEvent->button() & Qt::MidButton) {
+         slotTabCloseRequested(tabBar_->tabAt(mouseEvent->pos()));
+       } else if (mouseEvent->button() & Qt::LeftButton) {
+         if (tabBar_->tabAt(QPoint(mouseEvent->pos().x(), 0)) == 0)
+@@ -1794,7 +1794,7 @@
+ 
+   //! Устанавливаем время обновления ленты
+   q.prepare("UPDATE feeds SET updated=? WHERE id=?");
+-  q.addBindValue(QLocale::c().toString(QDateTime::currentDateTimeUtc(),
++  q.addBindValue(QLocale::c().toString(QDateTime::currentDateTime().toUTC(),
+                                        "yyyy-MM-ddTHH:mm:ss"));
+   q.addBindValue(parseFeedId);
+   q.exec();
+@@ -1913,10 +1913,10 @@
+ void RSSListing::slotFeedsTreeSelected(QModelIndex index, bool clicked,
+                                        bool createTab)
+ {
+-  QElapsedTimer timer;
+-  timer.start();
+-  qDebug() << "--------------------------------";
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //QElapsedTimer timer;
++  //timer.start();
++  //qDebug() << "--------------------------------";
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   int feedRow = index.row();
+ 
+@@ -1963,11 +1963,11 @@
+ 
+   setFeedsFilter(feedsFilterGroup_->checkedAction(), false);
+ 
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   setNewsFilter(newsFilterGroup_->checkedAction(), false);
+ 
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   if (newsModel_->rowCount() != 0) {
+     while (newsModel_->canFetchMore())
+@@ -1995,32 +1995,32 @@
+     }
+   }
+ 
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   newsView_->setCurrentIndex(newsModel_->index(newsRow, newsModel_->fieldIndex("title")));
+ 
+   if (newsRow == -1)
+     newsView_->verticalScrollBar()->setValue(newsRow);
+ 
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   if (clicked) {
+     if ((openingFeedAction_ != 2) && openNewsWebViewOn_) {
+       currentNewsTab->slotNewsViewSelected(newsModel_->index(newsRow, newsModel_->fieldIndex("title")));
+-      qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++      //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+     } else {
+       currentNewsTab->slotNewsViewSelected(newsModel_->index(-1, 6));
+-      qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++      //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+       QSqlQuery q(db_);
+       int newsId = newsModel_->index(newsRow, newsModel_->fieldIndex("id")).data(Qt::EditRole).toInt();
+       int feedId = feedsModel_->index(feedRow, feedsModel_->fieldIndex("id")).data(Qt::EditRole).toInt();
+       QString qStr = QString("UPDATE feeds SET currentNews='%1' WHERE id=='%2'").arg(newsId).arg(feedId);
+       q.exec(qStr);
+-      qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++      //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+     }
+   } else {
+     slotUpdateStatus();
+-    qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++    //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+   }
+ }
+ 
+@@ -2587,9 +2587,9 @@
+ void RSSListing::setNewsFilter(QAction* pAct, bool clicked)
+ {
+   if (currentNewsTab == NULL) return;
+-  QElapsedTimer timer;
+-  timer.start();
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //QElapsedTimer timer;
++  //timer.start();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   QModelIndex index = newsView_->currentIndex();
+ 
+@@ -2625,9 +2625,9 @@
+         arg(currentNewsTab->findText_->text()));
+   }
+ 
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed() << filterStr;
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed() << filterStr;
+   newsModel_->setFilter(filterStr);
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   if (pAct->objectName() == "filterNewsAll_") newsFilter_->setIcon(QIcon(":/images/filterOff"));
+   else newsFilter_->setIcon(QIcon(":/images/filterOn"));
+@@ -2644,7 +2644,7 @@
+       currentNewsTab->hideWebContent();
+   }
+ 
+-  qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
++  //qDebug() << __FUNCTION__ << __LINE__ << timer.elapsed();
+ 
+   if (pAct->objectName() != "filterNewsAll_")
+     newsFilterAction = pAct;
+Only in QuiteRSS-0.10.1-src.1/src: rsslisting.cpp.orig
+diff -ur QuiteRSS-0.10.1-src.orig/src/updatethread.cpp QuiteRSS-0.10.1-src.1/src/updatethread.cpp
+--- QuiteRSS-0.10.1-src.orig/src/updatethread.cpp	2012-08-01 23:18:51.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/updatethread.cpp	2012-08-22 08:16:58.620462713 -0400
+@@ -138,7 +138,7 @@
+       QDateTime replyLocalDate = QDateTime(replyDate.date(), replyDate.time());
+ 
+       qDebug() << feedDate << replyDate << replyLocalDate;
+-      qDebug() << feedDate.toMSecsSinceEpoch() << replyDate.toMSecsSinceEpoch() << replyLocalDate.toMSecsSinceEpoch();
++      qDebug() << feedDate.toTime_t() << replyDate.toTime_t() << replyLocalDate.toTime_t();
+       if ((reply->operation() == QNetworkAccessManager::HeadOperation) &&
+           ((!feedDate.isValid()) || (!replyLocalDate.isValid()) || (feedDate < replyLocalDate))) {
+         get(reply->url(), feedUrl, feedDate);
+Only in QuiteRSS-0.10.1-src.1/src: updatethread.cpp.orig
+diff -ur QuiteRSS-0.10.1-src.orig/src/webview.cpp QuiteRSS-0.10.1-src.1/src/webview.cpp
+--- QuiteRSS-0.10.1-src.orig/src/webview.cpp	2012-07-12 01:26:46.000000000 -0400
++++ QuiteRSS-0.10.1-src.1/src/webview.cpp	2012-08-22 08:28:23.968717263 -0400
+@@ -30,7 +30,7 @@
+       rightButtonClick = true;
+       forward();
+     }
+-  } else if (event->button() & Qt::MiddleButton) {
++  } else if (event->button() & Qt::MidButton) {
+     midButtonClick = true;
+   }
+ 
