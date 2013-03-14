@@ -12,6 +12,7 @@ Patch0:         quiterss-el6-compile.patch
 BuildRequires:  qt-devel
 BuildRequires:  qtwebkit-devel
 BuildRequires:  pkgconfig
+BuildRequires:  desktop-file-utils
 
 
 %description
@@ -23,9 +24,9 @@ Quite fast and comfortable to user RSS/Atom feed reader written on Qt.
 
 %prep
 %setup -q -n QuiteRSS-%{version}-src
-%if %{defined rhel} && 0%{?rhel} < 7
-%patch0 -p1 -b .el6-compile
-%endif
+#%if %{defined rhel} && 0%{?rhel} < 7
+#%patch0 -p1 -b .el6-compile
+#%endif
 chmod -x AUTHORS COPYING README
 
 
