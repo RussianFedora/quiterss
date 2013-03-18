@@ -1,5 +1,5 @@
 Name:           quiterss
-Version:        0.12.2
+Version:        0.12.3
 Release:        1%{?dist}
 Summary:        RSS/Atom feed reader written on Qt
 Summary(ru):    QuiteRSS - быстрая и удобная программа для чтения новостных лент RSS/Atom
@@ -62,6 +62,9 @@ fi
 
 
 %changelog
+* Mon Mar 18 2013 Vasiliy N. Glazov <vascom2@gmail.com> - 0.12.3-1.R
+- update to 0.12.3
+
 * Thu Mar 14 2013 Vasiliy N. Glazov <vascom2@gmail.com> - 0.12.2-1.R
 - update to 0.12.2
 
