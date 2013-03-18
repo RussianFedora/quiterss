@@ -58,6 +58,7 @@ fi
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*x*/apps/%{name}.png
+%{_datadir}/pixmaps/%{name}.png
 %{_datadir}/%{name}
 
 
